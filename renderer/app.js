@@ -5,7 +5,8 @@ let showModal = document.getElementById('show-modal'),
     closeModal = document.getElementById('close-modal'),
     modal = document.getElementById('modal'),
     addItem = document.getElementById('add-item'),
-    itemURL = document.getElementById('url')
+    itemURL = document.getElementById('url'),
+    search = document.getElementById('search')
 
 const enableModalButtons = () => {
     addItem.disabled = false
@@ -20,6 +21,15 @@ const disableModalButtons = () => {
     addItem.innerText = "Adding..."
     closeModal.style.display = 'none'
 }
+
+
+// filter item with search
+search.addEventListener('keyup', e => {
+    Array.from(document.getElementsByClassName('read-item')).forEach(item => {
+        let hasMatch = item.innerText.toLowerCase().includes(search.value.toLowerCase())
+        item.style.display = hasMatch ? 'flex' : 'none'
+    })
+})
 
 // show modal
 showModal.addEventListener('click', e=> {
@@ -52,4 +62,10 @@ ipcRenderer.on('new-item-success', (e, item) => {
 
     modal.style.display = 'none'
     itemURL.value = ''
+})
+
+document.addEventListener('keyup', e => {
+    if(e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        items.changeSelection(e.key === 'ArrowUp' ? -1 : 1)
+    }
 })
