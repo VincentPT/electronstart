@@ -11,13 +11,44 @@ fs.readFile(`${__dirname}/reader.js`, (err, data) => {
 
 exports.storage = JSON.parse(localStorage.getItem('readit-items')) || []
 
+// listen for 'Done' message from reader window
+window.addEventListener('message', e => {
+    console.log(e.data)
+    if(e.data.action === 'delete-reader-item') {
+        this.delete(e.data.itemIndex)
+        e.source.close()
+    }
+})
+
+exports.delete = itemIndex => {
+    items.removeChild(items.childNodes[itemIndex + 1])
+    this.storage.splice(itemIndex, 1)
+    this.save()
+
+    if(this.storage.length) {
+        let = newSelectedItemIndex = (itemIndex === 0) ? 0: itemIndex - 1
+        document.getElementsByClassName('read-item')[newSelectedItemIndex].classList.add('selected')
+    }
+}
+
+exports.getSelectedItem = () => {
+    let currentItem = document.getElementsByClassName('read-item selected')[0]
+    let itemIndex = 0
+    let child = currentItem
+    while( (child = child.previousElementSibling) != null) {
+        itemIndex++;
+    }
+
+    return {node:currentItem, index: itemIndex}
+}
+
 exports.save = () => {
     localStorage.setItem('readit-items', JSON.stringify(this.storage))
 }
 
 exports.select = e => {
     // remove current selected
-    document.getElementsByClassName('read-item selected')[0].classList.remove('selected')
+    this.getSelectedItem().node.classList.remove('selected')
     // set item is selected
     e.currentTarget.classList.add('selected')
 }
@@ -57,7 +88,7 @@ exports.addItem = (item, newItem = false) => {
 
 exports.changeSelection = direction => {
     // get current selected item
-    let selectedItem = document.getElementsByClassName('read-item selected')[0]
+    let selectedItem = this.getSelectedItem().node
     if(direction === 1) {
         if(selectedItem.nextElementSibling) {
             selectedItem.classList.remove('selected')
@@ -75,9 +106,9 @@ exports.changeSelection = direction => {
 // open the selected item
 exports.open = () => {
     // get current selected item
-    let selectedItem = document.getElementsByClassName('read-item selected')[0]
+    let selectedItem = this.getSelectedItem()
 
-    let url = selectedItem.dataset.url;
+    let url = selectedItem.node.dataset.url;
     console.log('Opening item:', url)
     // open item in proxy BrowserWindow
     let readerWin = window.open(url, `
@@ -90,7 +121,7 @@ exports.open = () => {
         contextIsolation=1
     `)
 
-    readerWin.eval(readerJS)
+    readerWin.eval(readerJS.replace('{{index}}', '' + selectedItem.index))
 }
 
 this.storage.forEach(item => {
