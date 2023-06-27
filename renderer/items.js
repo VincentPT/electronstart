@@ -1,4 +1,13 @@
+// modules
+const fs = require('fs')
+
 let items = document.getElementById('items')
+
+// get readerJS content
+let readerJS
+fs.readFile(`${__dirname}/reader.js`, (err, data) => {
+    readerJS = data.toString()
+})
 
 exports.storage = JSON.parse(localStorage.getItem('readit-items')) || []
 
@@ -70,6 +79,18 @@ exports.open = () => {
 
     let url = selectedItem.dataset.url;
     console.log('Opening item:', url)
+    // open item in proxy BrowserWindow
+    let readerWin = window.open(url, `
+        maxWidth=2000,
+        maxHeight=2000,
+        width=1200,
+        height=800,
+        backgroundColor=#DEDEDE,
+        nodeIntegration=0,
+        contextIsolation=1
+    `)
+
+    readerWin.eval(readerJS)
 }
 
 this.storage.forEach(item => {
