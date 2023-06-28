@@ -1,4 +1,5 @@
 // modules
+const { shell } = require('electron')
 const fs = require('fs')
 
 let items = document.getElementById('items')
@@ -105,6 +106,7 @@ exports.changeSelection = direction => {
 
 // open the selected item
 exports.open = () => {
+    if(!this.storage.length) return
     // get current selected item
     let selectedItem = this.getSelectedItem()
 
@@ -122,6 +124,16 @@ exports.open = () => {
     `)
 
     readerWin.eval(readerJS.replace('{{index}}', '' + selectedItem.index))
+}
+
+exports.openNative = () => {
+    if(!this.storage.length) return
+
+    // get current selected item
+    let selectedItem = this.getSelectedItem()
+    let url = selectedItem.node.dataset.url;
+
+    shell.openExternal(url)
 }
 
 this.storage.forEach(item => {
