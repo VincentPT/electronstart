@@ -7,7 +7,7 @@
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "reset": "git reset --hard",
-    "build": "electron-builder -m"
+    "build": "electron-builder -w"
   },
   "repository": "https://github.com/VincentPT/electronstart",
   "homepage": "https://github.com/VincentPT/electronstart",
@@ -34,7 +34,10 @@
       "target": "dmg"
     },
     "win": {
-      "target": "zip"
+      "target": "zip",
+      "certificateFile" : "private/mycert.p12",
+      "certificatePassword": "",
+      "verifyUpdateCodeSignature": false
     },
     "linux": {
       "category": "Utility"
