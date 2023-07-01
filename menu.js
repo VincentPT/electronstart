@@ -59,7 +59,8 @@ module.exports = (appWin) => {
                     click: () => {
                         shell.openExternal('https://github.com/VincentPT/electronstart')
                     }
-                }
+                },
+                { role: 'about' },
             ]
         }
     ]

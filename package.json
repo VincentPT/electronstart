@@ -1,22 +1,24 @@
 {
   "name": "readit",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Master Electron Project",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "reset": "git reset --hard",
-    "build": "electron-builder -w"
+    "build": "electron-builder -w",
+    "release": "electron-builder -w -p onTagOrDraft",
+    "win-cert": "electron-builder create-self-signed-cert -p vincentpt"
   },
   "repository": "https://github.com/VincentPT/electronstart",
   "homepage": "https://github.com/VincentPT/electronstart",
   "keywords": [
     "Electron",
-    "Master Electron",
+    "readit",
     "demo"
   ],
-  "author": "GitHub, Stackacademytv",
+  "author": "GitHub, vincentpt",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^9.0.0",
@@ -24,20 +26,25 @@
     "nodemon": "^2.0.0"
   },
   "dependencies": {
+    "electron-log": "^4.4.8",
+    "electron-updater": "^6.1.1",
     "electron-window-state": "^5.0.3"
   },
-  "build" : {
+  "build": {
     "appId": "com.vincentpt.readit",
     "copyright": "Copyright VincentPT",
+    "publish": {
+      "provider": "github"
+    },
     "mac": {
       "category": "public.app-category.utilities",
       "target": "dmg"
     },
     "win": {
-      "target": "zip",
-      "certificateFile" : "private/mycert.p12",
+      "certificateFile": "private/vincentpt.pfx",
       "certificatePassword": "",
-      "verifyUpdateCodeSignature": false
+      "verifyUpdateCodeSignature": false,
+      "publisherName": "vincentpt"
     },
     "linux": {
       "category": "Utility"
