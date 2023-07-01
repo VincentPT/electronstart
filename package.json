@@ -7,8 +7,8 @@
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "reset": "git reset --hard",
-    "build": "electron-builder -w",
-    "release": "electron-builder -w -p onTagOrDraft",
+    "build": "electron-builder -m",
+    "release": "electron-builder -mw -p onTagOrDraft",
     "win-cert": "electron-builder create-self-signed-cert -p vincentpt"
   },
   "repository": "https://github.com/VincentPT/electronstart",
